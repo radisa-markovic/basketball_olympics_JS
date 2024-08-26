@@ -9,9 +9,14 @@ try
     const groupB = new Group('B', parsedGroupData['B']);
     const groupC = new Group('C', parsedGroupData['C']);
 
+    // console.log("Konačan plasman u grupama:");
     groupA.printGroup();
-    groupB.printGroup();
-    groupC.printGroup();
+    groupA.playFirstRound();
+    groupA.printGroup();
+    groupA.playSecondRound();
+    groupA.printGroup();
+    groupA.playThirdRound();
+    groupA.printGroup();
 }
 catch(error)
 {
