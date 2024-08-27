@@ -1,4 +1,5 @@
 import { getScores } from "../util/calculations.js";
+import { MyGame } from "./MyGame.js";
 
 export class Team
 {
@@ -14,12 +15,30 @@ export class Team
         this.name = name;
         this.isoCode = isoCode;
         this.fibaRanking = fibaRanking;
+        this.myGames = [];
         this.numberOfWins = 0;
         this.numberOfDefeats = 0;
         this.points = 0;
         this.basketsScored = 0;
         this.basketsReceived = 0;
         this.netScoreDifference = 0;
+    }
+
+    /***  @param {MyGame} game */
+    addGame(game)
+    {
+        this.myGames.push(game);
+        // if(game.opponentWasBeaten())
+        // {
+        //     this.addWin();
+        // }
+        // else
+        // {
+        //     this.addLoss();
+        // }
+
+        this.basketsScored += game.myScore;
+        this.basketsReceived += game.opponentsScore;
     }
 
     addWin()
@@ -57,11 +76,21 @@ export class Team
         if(myChanceOfWinning > opponentsChanceOfWinning)
         {
             this.addWin();
-            this.basketsScored += score.winnersBasketCount;
-            this.basketsReceived += opposingTeam.basketsScored;
+            this.addGame(new MyGame(
+                opposingTeam.name,
+                score.winnersBasketCount,
+                score.losersBasketCount
+            ));
             opposingTeam.addLoss();
-            opposingTeam.basketsReceived += score.winnersBasketCount;
-            opposingTeam.basketsScored += score.losersBasketCount; 
+            opposingTeam.addGame(
+                new MyGame(
+                    this.name,
+                    score.losersBasketCount,
+                    score.winnersBasketCount
+                )
+            );
+
+            console.log(`${this.name} - ${opposingTeam.name} (${score.winnersBasketCount}:${score.losersBasketCount})`);
         }
         else
         {
@@ -69,15 +98,29 @@ export class Team
             if(myChanceOfWinning < opponentsChanceOfWinning)
             {
                 this.addLoss();
-                this.basketsScored += score.losersBasketCount;
-                this.basketsReceived += score.winnersBasketCount;
+                this.addGame(
+                    new MyGame(
+                        opposingTeam.name,
+                        score.losersBasketCount,
+                        score.winnersBasketCount
+                    )
+                );
                 opposingTeam.addWin();
-                opposingTeam.basketsScored += score.winnersBasketCount; 
-                opposingTeam.basketsReceived += score.losersBasketCount;
+                opposingTeam.addGame(
+                    new MyGame(
+                        this.name,
+                        score.winnersBasketCount,
+                        score.losersBasketCount
+                    )
+                );
+                console.log(`${this.name} - ${opposingTeam.name} (${score.losersBasketCount}:${score.winnersBasketCount})`);
             }
         }
 
         this.netScoreDifference = this.basketsScored - this.basketsReceived;
         opposingTeam.netScoreDifference = opposingTeam.basketsScored - opposingTeam.basketsReceived;
+
+        //print the final result
+        //won't do it here so that I don't traverse the list for no reason
     }
 }

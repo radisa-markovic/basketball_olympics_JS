@@ -10,11 +10,11 @@ try
     const groupC = new Group('C', parsedGroupData['C']);
 
     // console.log("Konačan plasman u grupama:");
-    groupA.printGroup();
+    // groupA.printGroup();
     groupA.playFirstRound();
-    groupA.printGroup();
+    // groupA.printGroup();
     groupA.playSecondRound();
-    groupA.printGroup();
+    // groupA.printGroup();
     groupA.playThirdRound();
     groupA.printGroup();
 }

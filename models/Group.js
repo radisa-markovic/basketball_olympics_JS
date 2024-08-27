@@ -20,16 +20,28 @@ export class Group
     printGroup()
     {
         console.log(`\tGrupa ${this.groupName} (Ime - pobede/porazi/bodovi/postignuti koševi/primljeni koševi/koš razlika)::`);
-        this.teams.forEach((team, index) => {
+        const teamsSorted = this.sortGroup();
+        teamsSorted.forEach((team, index) => {
             console.log(`\t\t${index + 1}. ${team.printStanding()}`);
         });
     }
 
-    //with all sorts of various tiebreakers
+    //third condition not yet done
     sortGroup()
     {
-        this.teams.sort((teamA, teamB) => {
-            return teamA.points > teamB.points;
+        return this.teams.toSorted((teamA, teamB) => {
+            if(teamA.points > teamB.points)
+                return -1;
+            else
+                if(teamA.points < teamB.points)
+                    return 1;
+            
+            //here's the case when the points are equal
+            const tiebreakerGame = teamA.myGames.find((game) => game.opponentsName === teamB.name);
+            if(tiebreakerGame.opponentWasBeaten())
+                return -1;
+            else
+                return 1;            
         });
     }
 
@@ -42,22 +54,26 @@ export class Group
 
     playFirstRound()
     {
+        //TODO: add console.log() for scores and round name
+        console.log(`Grupa: ${this.groupName} - I kolo`);
         this.teams[0].playWithTeam(this.teams[1]);
         this.teams[2].playWithTeam(this.teams[3]);
-        this.sortGroup();
+        // this.sortGroup();
     }
 
     playSecondRound()
     {
+        console.log(`Grupa: ${this.groupName} - II kolo`);
         this.teams[0].playWithTeam(this.teams[2]);
         this.teams[1].playWithTeam(this.teams[3]);
-        this.sortGroup();
+        // this.sortGroup();
     }
 
     playThirdRound()
     {
+        console.log(`Grupa: ${this.groupName} - III kolo`);
         this.teams[0].playWithTeam(this.teams[3]);
         this.teams[1].playWithTeam(this.teams[2]);
-        this.sortGroup();
+        // this.sortGroup();
     }
 }
