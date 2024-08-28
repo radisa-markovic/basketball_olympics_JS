@@ -15,7 +15,10 @@ export class Team
         this.name = name;
         this.isoCode = isoCode;
         this.fibaRanking = fibaRanking;
+        /**@type {MyGame[]} myGames */
         this.myGames = [];
+        /** @type {Team[]} scheduledOpponents */
+        this.nextOpponent = null;
         this.numberOfWins = 0;
         this.numberOfDefeats = 0;
         this.points = 0;
@@ -39,6 +42,18 @@ export class Team
 
         this.basketsScored += game.myScore;
         this.basketsReceived += game.opponentsScore;
+    }
+
+    //check which type this should be
+    //if it's only MyGame, you can't really calculate the score
+    //maybe that should not be an array, but an object,
+    //called myNextOpponent of type Team
+    //since I'm in a knockout stage, etc etc
+
+    /*** @param {Team} team */
+    addOpponent(team)
+    {
+        this.nextOpponent = team;
     }
 
     addWin()
@@ -122,5 +137,10 @@ export class Team
 
         //print the final result
         //won't do it here so that I don't traverse the list for no reason
+    }
+
+    getLastPlayedGame()
+    {
+        return this.myGames[this.myGames.length - 1];
     }
 }
