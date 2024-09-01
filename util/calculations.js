@@ -34,3 +34,23 @@ export function getScores(typeOfVictory)
         losersBasketCount
     };
 }
+
+export function calculateWinAndLossChance(teamA, teamB)
+{
+    //maybe a statistics object like
+    // win/loss ratio
+    // fiba ranking (adjusted)
+    const TOTAL_FIBA_MEMBERS_COUNT = 212;
+    let myChanceOfWinning = (TOTAL_FIBA_MEMBERS_COUNT - teamA.fibaRanking) * Math.random() + teamA.winStreakCount * teamA.exhibitionData.netScoreDifference;
+    let opponentsChanceOfWinning = (TOTAL_FIBA_MEMBERS_COUNT - teamB.fibaRanking) * Math.random() + teamB.winStreakCount * teamB.exhibitionData.netScoreDifference;
+
+    if(teamA.fibaRanking - teamB.fibaRanking > 10)
+        myChanceOfWinning += 10;
+    if(teamB.fibaRanking - teamA.fibaRanking > 10)
+        opponentsChanceOfWinning += 10;
+
+    return {
+        myChanceOfWinning,
+        opponentsChanceOfWinning
+    }
+}

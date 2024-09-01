@@ -5,10 +5,27 @@ import { Team } from "./models/Team.js";
 try
 {
     const groups = await fsp.readFile('./groups.json', 'utf-8');
+    const exibitionGames = await fsp.readFile("./exibitions.json", 'utf-8');
     const parsedGroupData = JSON.parse(groups);
-    const groupA = new Group('A', parsedGroupData['A']);
-    const groupB = new Group('B', parsedGroupData['B']);
-    const groupC = new Group('C', parsedGroupData['C']);
+    const parsedExhibitionGames = JSON.parse(exibitionGames);
+    /**
+     * "GER": [
+      {
+        "Date": "06/07/24",
+        "Opponent": "FRA",
+        "Result": "66-90"
+      },
+      {
+        "Date": "19/07/24",
+        "Opponent": "JPN",
+        "Result": "104-83"
+      }
+    ],
+     */
+
+    const groupA = new Group('A', parsedGroupData['A'], parsedExhibitionGames);
+    const groupB = new Group('B', parsedGroupData['B'], parsedExhibitionGames);
+    const groupC = new Group('C', parsedGroupData['C'], parsedExhibitionGames);
 
     // console.log("Konačan plasman u grupama:");
     // groupA.printGroup();
@@ -148,7 +165,7 @@ try
 }
 catch(error)
 {
-    console.error("File error: " + error);
+    console.error(error);
 }
 
 /**

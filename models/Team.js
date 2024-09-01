@@ -1,4 +1,4 @@
-import { getScores } from "../util/calculations.js";
+import { calculateWinAndLossChance, getScores } from "../util/calculations.js";
 import { MyGame } from "./MyGame.js";
 
 export class Team
@@ -25,23 +25,43 @@ export class Team
         this.basketsScored = 0;
         this.basketsReceived = 0;
         this.netScoreDifference = 0;
+        this.winStreakCount = 0;//if it's under 0, team is in a losing streak
+        //maybe do 'exhibitionData' as an object property
+        this.exhibitionData = {};
     }
 
     /***  @param {MyGame} game */
     addGame(game)
     {
         this.myGames.push(game);
-        // if(game.opponentWasBeaten())
-        // {
-        //     this.addWin();
-        // }
-        // else
-        // {
-        //     this.addLoss();
-        // }
 
         this.basketsScored += game.myScore;
         this.basketsReceived += game.opponentsScore;
+    }
+
+    static evaluateExibitionGamesData(exibitionGames)
+    {
+        //takes in Data, Opponent, and Result, all strings, result split on -
+        let evaluatedExhibitionData = {
+            basketsScored: 0,
+            basketsReceived: 0,
+            netScoreDifference: 0,
+            winStreakCount: 0
+        };
+
+        exibitionGames.forEach((exhibitionGame) => {
+            let myScore = parseInt(exhibitionGame.Result.split('-')[0]);
+            let opponentsScore = parseInt(exhibitionGame.Result.split('-')[1]);
+            evaluatedExhibitionData.basketsScored += myScore;
+            evaluatedExhibitionData.basketsReceived += opponentsScore;
+            evaluatedExhibitionData.netScoreDifference += (evaluatedExhibitionData.basketsScored - evaluatedExhibitionData.basketsReceived);
+
+            myScore > opponentsScore
+                ? evaluatedExhibitionData.winStreakCount++
+                : evaluatedExhibitionData.winStreakCount--
+        });
+
+        return evaluatedExhibitionData;
     }
 
     //check which type this should be
@@ -80,13 +100,20 @@ export class Team
     playWithTeam(opposingTeam)
     {
         let score;
+        /**Kod određivanja verovatnoće pobednika uzeti u obzir i formu ekipe. 
+         * Početna tačka za ovu kalkulaciju mogu biti podaci iz fajla exibitions.json 
+         * u kome su dati rezultati 2 prijateljske utakmice za svaku ekipu. 
+         * Formu prera;unavati kako turnir odmiče, a možete kao faktor forme uključiti
+         *  i jačinu protivnika i razliku koju je ekipa ostvarila. */
+
         if(Math.random() > 0.5)
             score = getScores("blowout");
         else
             score = getScores("closeGame");
-        //this should definitely include fibaRanking in some place
-        const myChanceOfWinning = this.fibaRanking * Math.random();
-        const opponentsChanceOfWinning = opposingTeam.fibaRanking * Math.random();
+        //so that the higher the ranking - the greater the chance of winning is
+        const winningChances = calculateWinAndLossChance(this, opposingTeam);
+        const myChanceOfWinning = winningChances.myChanceOfWinning;
+        const opponentsChanceOfWinning = winningChances.opponentsChanceOfWinning;
 
         if(myChanceOfWinning > opponentsChanceOfWinning)
         {

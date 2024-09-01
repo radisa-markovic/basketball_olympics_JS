@@ -2,18 +2,33 @@ import { Team } from "./Team.js";
 
 export class Group
 {
-    constructor(groupName, teams)
+    constructor(groupName, teams, exhibitionGamesData)
     {
         this.groupName = groupName;
         //this makes array elements have my class methods
         //instead of being from a generic JS object
         /** @type {Team[]} teams */
-        this.teams = teams.map((team) =>
-            new Team(
+
+        //exibiton data should go here, and it should read off of exibitions.json
+        //parse it, find its' ISOCode, and split on the result from all the games
+        //array, listed under the given isoCode
+        this.teams = teams.map((team) => {
+            const newTeam = new Team(
                 team.Team,
                 team.ISOCode,
                 team.FIBARanking
-            )                        
+            );
+            
+            const teamExibitionStats = Team.evaluateExibitionGamesData(exhibitionGamesData[team.ISOCode]);
+            newTeam.exhibitionData = {
+                basketsScored: teamExibitionStats.basketsScored,
+                basketsReceived: teamExibitionStats.basketsReceived,
+                netScoreDifference: teamExibitionStats.netScoreDifference,
+            };
+            newTeam.winStreakCount = teamExibitionStats.winStreakCount;
+
+            return newTeam;
+        }
         );
     }
 
