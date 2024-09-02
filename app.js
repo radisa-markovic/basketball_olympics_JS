@@ -8,20 +8,6 @@ try
     const exibitionGames = await fsp.readFile("./exibitions.json", 'utf-8');
     const parsedGroupData = JSON.parse(groups);
     const parsedExhibitionGames = JSON.parse(exibitionGames);
-    /**
-     * "GER": [
-      {
-        "Date": "06/07/24",
-        "Opponent": "FRA",
-        "Result": "66-90"
-      },
-      {
-        "Date": "19/07/24",
-        "Opponent": "JPN",
-        "Result": "104-83"
-      }
-    ],
-     */
 
     const groupA = new Group('A', parsedGroupData['A'], parsedExhibitionGames);
     const groupB = new Group('B', parsedGroupData['B'], parsedExhibitionGames);

@@ -35,14 +35,26 @@ export function getScores(typeOfVictory)
     };
 }
 
+/**
+ * 
+ * @param {Team} teamA 
+ * @param {Team} teamB 
+ * @returns 
+ */
 export function calculateWinAndLossChance(teamA, teamB)
 {
     //maybe a statistics object like
     // win/loss ratio
     // fiba ranking (adjusted)
     const TOTAL_FIBA_MEMBERS_COUNT = 212;
-    let myChanceOfWinning = (TOTAL_FIBA_MEMBERS_COUNT - teamA.fibaRanking) * Math.random() + teamA.winStreakCount * teamA.exhibitionData.netScoreDifference;
-    let opponentsChanceOfWinning = (TOTAL_FIBA_MEMBERS_COUNT - teamB.fibaRanking) * Math.random() + teamB.winStreakCount * teamB.exhibitionData.netScoreDifference;
+    let myChanceOfWinning = 
+        (TOTAL_FIBA_MEMBERS_COUNT - teamA.fibaRanking) + 
+        (teamA.winStreakCount * teamA.exhibitionData.netScoreDifference) + 
+        teamA.netScoreDifference + Math.random() * teamA.winStreakCount;
+    let opponentsChanceOfWinning = 
+        (TOTAL_FIBA_MEMBERS_COUNT - teamB.fibaRanking) + 
+        teamB.winStreakCount * teamB.exhibitionData.netScoreDifference + 
+        teamB.netScoreDifference + Math.random() * teamB.winStreakCount;
 
     if(teamA.fibaRanking - teamB.fibaRanking > 10)
         myChanceOfWinning += 10;
