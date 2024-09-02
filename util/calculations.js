@@ -41,6 +41,9 @@ export function getScores(typeOfVictory)
  * @param {Team} teamB 
  * @returns 
  */
+/*formula should include something like "win rating" regarding if you beat like Puerto Rico
+and South Sudan, you don't have the same rating like losing to USA by a point,
+but I'm short on personal time at the moment of writing this code*/
 export function calculateWinAndLossChance(teamA, teamB)
 {
     //maybe a statistics object like
@@ -49,11 +52,11 @@ export function calculateWinAndLossChance(teamA, teamB)
     const TOTAL_FIBA_MEMBERS_COUNT = 212;
     let myChanceOfWinning = 
         (TOTAL_FIBA_MEMBERS_COUNT - teamA.fibaRanking) + 
-        (teamA.winStreakCount * teamA.exhibitionData.netScoreDifference) + 
+        (teamA.winStreakCount + teamA.exhibitionData.netScoreDifference) + 
         teamA.netScoreDifference + Math.random() * teamA.winStreakCount;
     let opponentsChanceOfWinning = 
         (TOTAL_FIBA_MEMBERS_COUNT - teamB.fibaRanking) + 
-        teamB.winStreakCount * teamB.exhibitionData.netScoreDifference + 
+        teamB.winStreakCount + teamB.exhibitionData.netScoreDifference + 
         teamB.netScoreDifference + Math.random() * teamB.winStreakCount;
 
     if(teamA.fibaRanking - teamB.fibaRanking > 10)

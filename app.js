@@ -18,16 +18,19 @@ try
     groupA.playFirstRound();
     groupA.playSecondRound();
     groupA.playThirdRound();
+    groupA.printGroup();
     const sortedGroupA = groupA.sortGroup();
 
     groupB.playFirstRound();
     groupB.playSecondRound();
     groupB.playThirdRound();
+    groupB.printGroup();
     const sortedGroupB = groupB.sortGroup();
 
     groupC.playFirstRound();
     groupC.playSecondRound();
     groupC.playThirdRound();
+    groupC.printGroup();
     const sortedGroupC = groupC.sortGroup();
 
     const firstPlacedTeams = [];
@@ -61,10 +64,10 @@ try
     
     //now teams have their opponents in scheduledOpponents array
     //the games should be played now
-    console.log("=====================>>>>> Playoffs");
+    console.log("Četvrtfinale");
     potD[0].playWithTeam(potD[0].nextOpponent);//1 team from D goes to F bracket
     potD[1].playWithTeam(potD[1].nextOpponent);//1 team from here goes to matching F bracket
-    console.log("=====================>>>>> Playoffs - other bracket  <===");
+    console.log("\n");
     potF[0].playWithTeam(potF[0].nextOpponent);
     potF[1].playWithTeam(potF[1].nextOpponent);
 
@@ -97,13 +100,6 @@ try
     else
         quarterfinalWinner4 = potF[1].nextOpponent;
 
-    //print out the quarterfinalist winners
-    console.log("Playoff winners:");
-    console.log(quarterfinalWinner1.name);
-    console.log(quarterfinalWinner2.name);
-    console.log(quarterfinalWinner3.name);
-    console.log(quarterfinalWinner4.name);
-
     //manually assigning tournament pairs
     //1st and 3rd, 2nd and 4th
     quarterfinalWinner1.nextOpponent = quarterfinalWinner3;
@@ -112,42 +108,78 @@ try
     quarterfinalWinner4.nextOpponent = quarterfinalWinner2;
 
     //play the games
+    console.log("Polufinale\n");
     quarterfinalWinner1.playWithTeam(quarterfinalWinner1.nextOpponent);
     quarterfinalWinner2.playWithTeam(quarterfinalWinner2.nextOpponent);
 
     let firstFinalist;
+    let semisBracketLoser1;
     let secondFinalist;
+    let semisBracketLoser2;
 
     if(quarterfinalWinner1.getLastPlayedGame().opponentWasBeaten())
+    {
         firstFinalist = quarterfinalWinner1;
+        semisBracketLoser1 = quarterfinalWinner1.nextOpponent;
+    }
     else
+    {
         firstFinalist = quarterfinalWinner1.nextOpponent;
+        semisBracketLoser1 = quarterfinalWinner1;
+    }
 
     if(quarterfinalWinner2.getLastPlayedGame().opponentWasBeaten())
+    {
         secondFinalist = quarterfinalWinner2;
+        semisBracketLoser2 = quarterfinalWinner2.nextOpponent;
+    }
     else
+    {
         secondFinalist = quarterfinalWinner2.nextOpponent;
-
-    console.log("******* Finalists ***********");
-    console.log(firstFinalist.name);
-    console.log(secondFinalist.name);
+        semisBracketLoser2 = quarterfinalWinner2;
+    }
 
     firstFinalist.nextOpponent = secondFinalist;
     secondFinalist.nextOpponent = firstFinalist;
 
-    console.log("***** Final game *****");
+    console.log("Third place participants");
+    console.log(semisBracketLoser1.name);
+    console.log(semisBracketLoser2.name);
+
+    console.log("Utakmica za trece mesto");
+    semisBracketLoser1.playWithTeam(semisBracketLoser2);
+
+    console.log("Finale");
     firstFinalist.playWithTeam(secondFinalist);
 
     let tournamentWinner;
+    let secondPlacedTeam;
+    let thirdPlaceTeam;
 
     if(firstFinalist.getLastPlayedGame().opponentWasBeaten())
+    {
         tournamentWinner = firstFinalist;
+        secondPlacedTeam = secondFinalist;
+    }
     else
+    {
         tournamentWinner = secondFinalist;
+        secondPlacedTeam = firstFinalist;
+    }
 
-    console.log("WINNER GOLD MEDAL");
-    console.log(tournamentWinner.name);
-    // groupA.printGroup();
+    if(semisBracketLoser1.getLastPlayedGame().opponentWasBeaten())
+    {
+        thirdPlaceTeam = semisBracketLoser1;
+    }
+    else
+    {
+        thirdPlaceTeam = semisBracketLoser2;
+    }
+
+    console.log("Medalje");
+    console.log("1. " + tournamentWinner.name);
+    console.log("2. " + secondPlacedTeam.name);
+    console.log("3. " + thirdPlaceTeam.name);
 }
 catch(error)
 {
